@@ -1,16 +1,23 @@
 // creates and exports the database connection
 const { Pool } = require('pg');
 
+// check if running in Railway or local environment
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+
 // create a new pool instance with connection settings
 const pool = new Pool(
-    process.env.DATABASE_URL
-        ? { 
-            // Railway connection settings
-            connectionString: process.env.DATABASE_URL, 
-            ssl: { rejectUnauthorized: false } // required for Railway's PostgreSQL
+    isProduction
+        ? {
+            // connection settings for Railway
+            host: 'hopper.proxy.rlwy.net',
+            port: 51698,
+            database: 'railway',
+            user: 'postgres',
+            password: process.env.DB_PASSWORD,
+            ssl: { rejectUnauthorized: false }
           }
         : {
-            // local connection settings
+            // connection settings for local development
             host: 'localhost',
             port: 5432,
             database: process.env.DB_NAME,
@@ -20,7 +27,7 @@ const pool = new Pool(
 );
 
 // test
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-
+console.log('Is production:', isProduction);
+console.log('RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT);
 // return statement
 module.exports = pool;
