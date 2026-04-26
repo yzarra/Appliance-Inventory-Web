@@ -116,7 +116,7 @@ function Dashboard({ token, onLogout }) {
   const fetchAppliances = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/appliances', {
+      const res = await fetch('https://appliance-inventory-web-production.up.railway.app/api/appliances', {
         headers: authHeaders
       });
       const data = await res.json();
@@ -137,7 +137,7 @@ function Dashboard({ token, onLogout }) {
 
     try {
       // basically call addAppliance() in controller
-      const res = await fetch('http://localhost:3001/api/appliances', {
+      const res = await fetch('https://appliance-inventory-web-production.up.railway.app/api/appliances', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ type: newType, brand: newBrand, price: parseFloat(newPrice) / rate})
@@ -171,7 +171,7 @@ function Dashboard({ token, onLogout }) {
     setEditError('');
     try {
       // call editAppliance method in controller
-      const res = await fetch(`http://localhost:3001/api/appliances/${serial}`, {
+      const res = await fetch(`https://appliance-inventory-web-production.up.railway.app/api/appliances/${serial}`, {
         method: 'PUT',
         headers: authHeaders,
         body: JSON.stringify({ type: editType, brand: editBrand, price: parseFloat(editPrice) / rate })
@@ -191,7 +191,7 @@ function Dashboard({ token, onLogout }) {
     // confirm before deleting
     if (!window.confirm('Are you sure you want to delete this appliance?')) return;
     try {      // call delete method in controller
-      const res = await fetch(`http://localhost:3001/api/appliances/${serial}`, {
+      const res = await fetch(`https://appliance-inventory-web-production.up.railway.app/api/appliances/${serial}`, {
         method: 'DELETE',
         headers: authHeaders
       });
@@ -212,7 +212,7 @@ function Dashboard({ token, onLogout }) {
         ? `?brand=${searchBrand}`
         : `?maxPrice=${searchPrice / rate}`; 
 
-      const res = await fetch(`http://localhost:3001/api/appliances/search${query}`, {
+      const res = await fetch(`https://appliance-inventory-web-production.up.railway.app/api/appliances/search${query}`, {
         headers: authHeaders
       });
       const data = await res.json();

@@ -32,7 +32,7 @@ function Register({ onRegister, onSwitch }) {
 
     // calls register method in server
     try {
-      const res = await fetch('http://localhost:3001/api/auth/register', {
+      const res = await fetch('https://appliance-inventory-web-production.up.railway.app/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
