@@ -19,5 +19,8 @@ const pool = new Pool(
           }
 );
 
+// test
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+
 // return statement
 module.exports = pool;
