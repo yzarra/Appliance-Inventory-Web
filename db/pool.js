@@ -1,6 +1,5 @@
 // creates and exports the database connection
 const { Pool } = require('pg');
-require('dotenv').config();
 
 // create a new pool instance with connection settings
 const pool = new Pool(
