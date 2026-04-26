@@ -1,21 +1,24 @@
-// creates and exports the database (db) connection 
-
-// import pool (manages database connections) from sql (pg) library
+// creates and exports the database connection
 const { Pool } = require('pg');
-
-// load .env file
 require('dotenv').config();
 
-// create new instance of pool object
-const pool = new Pool({
-    host: 'localhost',
-    port: 5432,
-    // password keys from env
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-});
+// create a new pool instance with connection settings
+const pool = new Pool(
+    process.env.DATABASE_URL
+        ? { 
+            // Railway connection settings
+            connectionString: process.env.DATABASE_URL, 
+            ssl: { rejectUnauthorized: false } // required for Railway's PostgreSQL
+          }
+        : {
+            // local connection settings
+            host: 'localhost',
+            port: 5432,
+            database: process.env.DB_NAME,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+          }
+);
 
-// like a return statement
-// if you import pool.js this is what it recieves (pool object)
+// return statement
 module.exports = pool;
