@@ -3,7 +3,11 @@
 // Import Express (like a library - handles incoming http req.s) and Import cors (allows frontend to send requests to backend) and Import .env variables 
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+
+// Load environment variables from .env file
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 // create instance of application
 const app = express();
