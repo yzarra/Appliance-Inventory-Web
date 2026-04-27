@@ -28,3 +28,6 @@ All data saved to a PostgreSQL database per user account
 
 ## External API
 - ExchangeRate API (used for the live currency conversion)
+
+## My Original Java Version I Ported
+https://github.com/yzarra/Inventory-Management-System
