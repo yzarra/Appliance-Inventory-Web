@@ -106,7 +106,7 @@ function Dashboard({ token, onLogout }) {
     'Authorization': `Bearer ${token}` // attach JWT token like a wristband on every request
   };
 
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchAppliances();
     const savedCurrency = localStorage.getItem('currency') || 'USD';
