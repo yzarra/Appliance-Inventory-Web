@@ -1,4 +1,5 @@
 # Appliance Inventory Web App
+[Link to Demo!](https://appliance-inventory-web-mgkh.vercel.app)
 
 A full-stack web application for managing a personal appliance inventory. Built with React, Node.js, Express, and PostgreSQL.
 
