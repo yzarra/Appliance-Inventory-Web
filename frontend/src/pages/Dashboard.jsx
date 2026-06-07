@@ -106,27 +106,33 @@ function Dashboard({ token, onLogout }) {
     'Authorization': `Bearer ${token}` // attach JWT token like a wristband on every request
   };
 
-// eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchAppliances();
-    const savedCurrency = localStorage.getItem('currency') || 'USD';
-    fetchRate(savedCurrency);
-  }, []);
-
   const fetchAppliances = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('https://appliance-inventory-web.onrender.com', {
+  setLoading(true);
+  try {
+    const res = await fetch(
+      'https://appliance-inventory-web.onrender.com/api/appliances',
+      {
         headers: authHeaders
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setAppliances(data); 
-    } catch (err) {
-      setError('Failed to load appliances');
-    }
-    setLoading(false);
-  };
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error);
+
+    setAppliances(data);
+  } catch (err) {
+    setError('Failed to load appliances');
+  }
+  setLoading(false);
+};
+
+useEffect(() => {
+  const savedCurrency = localStorage.getItem('currency') || 'USD';
+  fetchRate(savedCurrency);
+
+  fetchAppliances();
+}, []);
 
  // add appliance function
   const handleAdd = async () => {
