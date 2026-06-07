@@ -132,6 +132,8 @@ useEffect(() => {
   fetchRate(savedCurrency);
 
   fetchAppliances();
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
  // add appliance function
