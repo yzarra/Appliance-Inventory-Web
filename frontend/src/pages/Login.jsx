@@ -17,7 +17,7 @@ function Login({ onLogin, onSwitch }) {
     // validation
     try {
         // send login request to backend
-      const res = await fetch('https://appliance-inventory-web-production.up.railway.app/api/auth/login', {
+      const res = await fetch('https://appliance-inventory-web.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
