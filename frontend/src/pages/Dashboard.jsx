@@ -167,7 +167,7 @@ useEffect(() => {
 
   // edit appliance function
   const startEdit = (appliance) => {
-    setEditingId(appliance.serial);
+    setEditingId(appliance.id);
     setEditType(appliance.model);
     setEditBrand(appliance.brand);
     setEditPrice(appliance.price * rate); 
@@ -175,11 +175,11 @@ useEffect(() => {
   };
 
   // When user clicks "Save" on edit form
-  const handleEdit = async (serial) => {
+  const handleEdit = async (id) => {
     setEditError('');
     try {
       // call editAppliance method in controller
-      const res = await fetch(`https://appliance-inventory-web.onrender.com/api/appliances/${serial}`, {
+      const res = await fetch(`https://appliance-inventory-web.onrender.com/api/appliances/${id}`, {
         method: 'PUT',
         headers: authHeaders,
         body: JSON.stringify({ model: editType, brand: editBrand, price: parseFloat(editPrice) / rate })
@@ -188,25 +188,25 @@ useEffect(() => {
       if (!res.ok) throw new Error(data.error);
 
       // Update that appliance in the array  
-      setAppliances(prev => prev.map(a => a.serial === serial ? data : a));
+      setAppliances(prev => prev.map(a => a.id === id ? data : a));
       setEditingId(null); // close edit form
     } catch (err) {
       setEditError(err.message || 'Failed to update appliance');
     }
   };
   // delete appliance function
-  const handleDelete = async (serial) => {
+  const handleDelete = async (id) => {
     // confirm before deleting
     if (!window.confirm('Are you sure you want to delete this appliance?')) return;
     try {      // call delete method in controller
-      const res = await fetch(`/api/appliances/${serial}`, {
+      const res = await fetch(`/api/appliances/${id}`, {
         method: 'DELETE',
         headers: authHeaders
       });
       // if delete failed, throw error
       if (!res.ok) throw new Error('Failed to delete appliance');
     // Remove deleted appliance from the array
-        setAppliances(prev => prev.filter(a => a.serial !== serial));
+        setAppliances(prev => prev.filter(a => a.id !== id));
     } catch (err) {
       setError('Failed to delete appliance');
     }
@@ -412,10 +412,10 @@ useEffect(() => {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
           {displayedAppliances.map(appliance => (
-            <div key={appliance.serial} style={glassCard}>
+            <div key={appliance.id} style={glassCard}>
 
               {/* ── VIEW MODE — normal card display ── */}
-              {editingId !== appliance.serial ? (
+              {editingId !== appliance.id ? (
                 <>
                   {/* Serial badge */}
                   <div style={{
@@ -428,7 +428,7 @@ useEffect(() => {
                     borderRadius: '4px',
                     marginBottom: '10px'
                   }}>
-                    Serial #{appliance.serial}
+                    Serial #{appliance.id}
                   </div>
 
                   {/* Brand and type */}
@@ -464,7 +464,7 @@ useEffect(() => {
                         fontWeight: '600',
                         cursor: 'pointer',
                     }}
-                        onClick={() => handleDelete(appliance.serial)}>
+                        onClick={() => handleDelete(appliance.id)}>
                         Delete
                     </button>
                 </div>
@@ -474,7 +474,7 @@ useEffect(() => {
                 // ── EDIT MODE — inline edit form on the card ──
                 <>
                   <p style={{ color: '#f5e0d8', fontSize: '13px', fontWeight: '600', marginBottom: '12px' }}>
-                    Editing #{appliance.serial}
+                    Editing #{appliance.id}
                   </p>
                   {editError && <p style={{ color: '#d46a48', fontSize: '12px', marginBottom: '8px' }}>{editError}</p>}
 
@@ -486,7 +486,7 @@ useEffect(() => {
 
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button style={{ ...coralBtn, fontSize: '12px', padding: '6px 14px' }}
-                      onClick={() => handleEdit(appliance.serial)}>
+                      onClick={() => handleEdit(appliance.id)}>
                       Save
                     </button>
                     <button style={{ ...ghostBtn, fontSize: '12px', padding: '6px 14px' }}
