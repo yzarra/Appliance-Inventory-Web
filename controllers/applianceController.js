@@ -6,7 +6,7 @@ const pool = require('../db/pool');
 const getAll = async (req, res) => {
     try{
         const result = await pool.query(
-            'SELECT * FROM appliances WHERE user_id = $1 ORDER BY serial ASC', 
+            'SELECT * FROM appliances WHERE user_id = $1 ORDER BY id ASC', 
             [req.user.id]
         );
         // send array of appliances as JSON
@@ -46,7 +46,7 @@ const addAppliance = async (req, res) => {
             [type, brand, price, req.user.id]
         );
         res.status(201).json(result.rows[0]);
-    } catch {
+    } catch (error) {
         console.error('addAppliance error: ', error);
         res.status(500).json({ error: 'Failed to add appliance'});
     }
@@ -72,7 +72,7 @@ const editAppliance = async (req, res) => {
     try {
         // check if exists and belongs to user
         const existing = await pool.query(
-            'SELECT * FROM appliances WHERE serial = $1 AND user_id = $2',
+            'SELECT * FROM appliances WHERE id = $1 AND user_id = $2',
             [id, req.user.id]
         );
 
@@ -87,7 +87,7 @@ const editAppliance = async (req, res) => {
 
         // update appliance in db
         const result = await pool.query(
-            'UPDATE appliances SET type = $1, brand = $2, price = $3 WHERE serial = $4 AND user_id = $5 RETURNING *',
+            'UPDATE appliances SET type = $1, brand = $2, price = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
             [updatedType, updatedBrand, updatedPrice, id, req.user.id]
         );
         res.json(result.rows[0]);
@@ -136,7 +136,7 @@ const deleteAppliance = async (req, res) => {
     try {
         // check if exists and belongs to user
         const existing = await pool.query(
-            'SELECT * FROM appliances WHERE serial = $1 AND user_id = $2',
+            'SELECT * FROM appliances WHERE id = $1 AND user_id = $2',
             [id, req.user.id]
         );
         // if not found, return 404
@@ -145,7 +145,7 @@ const deleteAppliance = async (req, res) => {
         }
         // otherwise delete appliance from db
         await pool.query(
-            'DELETE FROM appliances WHERE serial = $1 AND user_id = $2',    
+            'DELETE FROM appliances WHERE id = $1 AND user_id = $2',    
             [id, req.user.id]
         );
         // return 204 no content if successful
