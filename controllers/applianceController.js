@@ -21,18 +21,18 @@ const getAll = async (req, res) => {
 const addAppliance = async (req, res) => {
 
     // input
-    const { type, brand, price } = req.body;
+    const { model, brand, price } = req.body;
 
-    // valid appliance types
-    const validTypes = ['Fridge', 'Air Conditioner', 'Washer', 'Dryer', 
+    // valid appliance models
+    const validModels = ['Fridge', 'Air Conditioner', 'Washer', 'Dryer', 
         'Freezer', 'Stove', 'Dishwasher', 'Water Heater', 'Microwave'];
     
     // validate input
-    if (!type || !brand || !price){
-        return res.status(400).json({ error: 'Type, brand and price are required'});
+    if (!model || !brand || !price){
+        return res.status(400).json({ error: 'Model, brand and price are required'});
     }
-    if (!validTypes.includes(type)){
-        return res.status(400).json({ error: 'Invalid appliance type' });
+    if (!validModels.includes(model)){
+        return res.status(400).json({ error: 'Invalid appliance model' });
     }
     if (price < 1){
         return res.status(400).json({ error: 'Price must be at least $1' });
@@ -42,8 +42,8 @@ const addAppliance = async (req, res) => {
     try {
         // insert appliance into database
         const result = await pool.query(
-            'INSERT INTO appliances (type, brand, price, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
-            [type, brand, price, req.user.id]
+            'INSERT INTO appliances (model, brand, price, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+            [model, brand, price, req.user.id]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
@@ -56,13 +56,13 @@ const addAppliance = async (req, res) => {
 const editAppliance = async (req, res) => {
     // search for appliance
     const { id } = req.params;
-    const { type, brand, price } = req.body;
-    const validTypes = ['Fridge', 'Air Conditioner', 'Washer', 'Dryer',
+    const { model, brand, price } = req.body;
+    const validModels = ['Fridge', 'Air Conditioner', 'Washer', 'Dryer',
         'Freezer', 'Stove', 'Dishwasher', 'Water Heater', 'Microwave'];
     
     // validate - rules for adding an appliance
-    if (type && !validTypes.includes(type)){
-        return res.status(400).json({ error: 'Invalid appliance type' });
+    if (model && !validModels.includes(model)){
+        return res.status(400).json({ error: 'Invalid appliance model' });
     }
     if (price && price < 1) {
         return res.status(400).json({ error: 'Price must be at least $1 '});
@@ -81,14 +81,14 @@ const editAppliance = async (req, res) => {
         }
 
         // update chosen field and keep the rest the same
-        const updatedType = type || existing.rows[0].type;
+        const updatedModel = model || existing.rows[0].model;
         const updatedBrand = brand || existing.rows[0].brand;
         const updatedPrice = price || existing.rows[0].price;
 
         // update appliance in db
         const result = await pool.query(
-            'UPDATE appliances SET type = $1, brand = $2, price = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
-            [updatedType, updatedBrand, updatedPrice, id, req.user.id]
+            'UPDATE appliances SET model = $1, brand = $2, price = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
+            [updatedModel, updatedBrand, updatedPrice, id, req.user.id]
         );
         res.json(result.rows[0]);
 
