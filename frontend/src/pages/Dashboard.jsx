@@ -148,7 +148,7 @@ useEffect(() => {
       const res = await fetch('https://appliance-inventory-web.onrender.com/api/appliances', {
         method: 'POST',
         headers: authHeaders,
-        body: JSON.stringify({ type: newType, brand: newBrand, price: parseFloat(newPrice) / rate})
+        body: JSON.stringify({ model: newType, brand: newBrand, price: parseFloat(newPrice) / rate})
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -168,7 +168,7 @@ useEffect(() => {
   // edit appliance function
   const startEdit = (appliance) => {
     setEditingId(appliance.serial);
-    setEditType(appliance.type);
+    setEditType(appliance.model);
     setEditBrand(appliance.brand);
     setEditPrice(appliance.price * rate); 
     setEditError('');
@@ -182,7 +182,7 @@ useEffect(() => {
       const res = await fetch(`https://appliance-inventory-web.onrender.com/api/appliances/${serial}`, {
         method: 'PUT',
         headers: authHeaders,
-        body: JSON.stringify({ type: editType, brand: editBrand, price: parseFloat(editPrice) / rate })
+        body: JSON.stringify({ model: editType, brand: editBrand, price: parseFloat(editPrice) / rate })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -213,10 +213,10 @@ useEffect(() => {
   };
 
   // search function
-  const handleSearch = async (type) => {
+  const handleSearch = async (model) => {
     try {
-      // construct query string based on search type
-      const query = type === 'brand'
+      // construct query string based on search model
+      const query = model === 'brand'
         ? `?brand=${searchBrand}`
         : `?maxPrice=${searchPrice / rate}`; 
 
@@ -347,7 +347,7 @@ useEffect(() => {
           </select>
 
           <input style={inputStyle} placeholder="Brand" value={newBrand} onChange={e => setNewBrand(e.target.value)} />
-          <input style={inputStyle} placeholder={`Price (${currency})`} type="number" value={newPrice} onChange={e => setNewPrice(e.target.value)} />
+          <input style={inputStyle} placeholder={`Price (${currency})`} model="number" value={newPrice} onChange={e => setNewPrice(e.target.value)} />
 
           <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
             <button style={coralBtn} onClick={handleAdd} disabled={addLoading}>
@@ -385,7 +385,7 @@ useEffect(() => {
             <input
               style={{ ...inputStyle, marginBottom: 0 }}
               placeholder="e.g. 500"
-              type="number"
+              model="number"
               value={searchPrice}
               onChange={e => setSearchPrice(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch('price')}
@@ -433,7 +433,7 @@ useEffect(() => {
 
                   {/* Brand and type */}
                   <p style={{ color: 'rgba(245,224,216,0.65)', fontSize: '11px', marginBottom: '2px' }}>
-                    {appliance.brand} · {appliance.type}
+                    {appliance.brand} · {appliance.model}
                   </p>
 
                   {/* Price — converted if currency selected */}
@@ -482,7 +482,7 @@ useEffect(() => {
                     {validTypes.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                   <input style={inputStyle} placeholder="Brand" value={editBrand} onChange={e => setEditBrand(e.target.value)} />
-                  <input style={inputStyle} placeholder={`Price (${currency})`} type="number" value={editPrice} onChange={e => setEditPrice(e.target.value)} />
+                  <input style={inputStyle} placeholder={`Price (${currency})`} model="number" value={editPrice} onChange={e => setEditPrice(e.target.value)} />
 
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button style={{ ...coralBtn, fontSize: '12px', padding: '6px 14px' }}
